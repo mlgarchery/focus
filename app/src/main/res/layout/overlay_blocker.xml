@@ -8,15 +8,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="⏱️ Shorts Limit Reached\n\nYou've reached your 5-minute limit.\nTime to focus on something else!"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:textAlignment="center"
         android:gravity="center"
         android:padding="24dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="⏱️ Shorts Limit Reached\n\nYou've reached your 5-second limit.\nTime to focus on something else!"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
