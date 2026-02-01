@@ -18,6 +18,8 @@ local.properties
 *.jks
 *.keystore
 keystore_base64.txt
+# containing env var for building release apk
+keystore.properties
 
 # Release build
 app/release

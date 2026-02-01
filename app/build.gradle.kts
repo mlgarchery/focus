@@ -1,6 +1,21 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+}
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
+fun getProperty(key: String, envVar: String): String {
+    return (keystoreProperties[key] as String).ifEmpty {
+        System.getenv(envVar) ?: ""
+    }
 }
 
 android {
@@ -12,17 +27,17 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = System.getenv("APP_VERSION") ?: "1.0.0"
+        versionName = System.getenv("APP_VERSION") ?: "debug"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file("release-keystore.jks")
-            storePassword = System.getenv("KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS")
-            keyPassword = System.getenv("KEY_PASSWORD")
+            storeFile = file("../release-keystore.jks") // Generated during the build the github action
+            storePassword = getProperty("storePassword", "KEYSTORE_PASSWORD")
+            keyAlias = getProperty("keyAlias", "KEY_ALIAS")
+            keyPassword = getProperty("keyPassword", "KEY_PASSWORD")
         }
     }
 
