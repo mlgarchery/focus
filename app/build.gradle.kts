@@ -26,7 +26,7 @@ android {
     defaultConfig {
         applicationId = "fr.focusphone"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = System.getenv("APP_VERSION") ?: "debug"
 

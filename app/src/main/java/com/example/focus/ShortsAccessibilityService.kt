@@ -1,4 +1,4 @@
-package com.example.focus
+package fr.focusphone
 
 import android.accessibilityservice.AccessibilityService
 import android.view.accessibility.AccessibilityEvent
@@ -29,71 +29,52 @@ class ShortsAccessibilityService : AccessibilityService() {
     // TODO understand this override
     override fun onInterrupt() {}
 
-    /**
-     * Reads the packageNames from accessibility_service_config.xml
-     * to avoid hardcoding them in the code.
-     */
-    private fun loadMonitoredPackagesFromConfig(): Set<String> {
-        return try {
-            val parser: XmlPullParser = resources.getXml(R.xml.accessibility_service_config)
-            var eventType = parser.eventType
-            
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.START_TAG && 
-                    parser.name == "accessibility-service") {
-                    val packageNames = parser.getAttributeValue(
-                        "http://schemas.android.com/apk/res/android",
-                        "packageNames"
-                    )
-                    if (packageNames != null) {
-                        return packageNames.split(",").map { it.trim() }.toSet()
-                    }
-                }
-                eventType = parser.next()
-            }
-
-            // Fallback if parsing fails
-            emptySet()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emptySet()
-        }
-    }
+    private var detectedHeuristic: String = "Unknown"
 
     private fun isYouTubeShorts(root: AccessibilityNodeInfo): Boolean {
         // Heuristic 1: Known Shorts container
         if (findNodeById(root, "com.google.android.youtube:id/reel_watch_fragment")) {
+            detectedHeuristic = "Reel container detected"
             return true
         }
 
-        // Heuristic 2: "Shorts" tab selected
-        if (findNodeWithText(root, "Shorts")) {
+        // Heuristic 2: "Shorts" text detected
+        val textFound = findNodeWithText(root, "Shorts")
+        if (textFound != null) {
+            detectedHeuristic = "'Shorts' found in  text '$textFound'"
             return true
         }
 
         // Heuristic 3: Vertical pager + no seek bar
         if (looksLikeVerticalVideoFeed(root)) {
+            detectedHeuristic = "Vertical video feed detected"
             return true
         }
 
         return false
     }
+
 
     private fun findNodeById(node: AccessibilityNodeInfo, id: String): Boolean {
         return node.findAccessibilityNodeInfosByViewId(id).isNotEmpty()
     }
 
-    private fun findNodeWithText(node: AccessibilityNodeInfo, text: String): Boolean {
+    /**
+     * Recursively searches for a node with the given text, **ignoring case**.
+     * Returns null if not found or the node text if found.
+     */
+    private fun findNodeWithText(node: AccessibilityNodeInfo, text: String): String? {
         if (node.text?.toString()?.contains(text, ignoreCase = true) == true) {
-            return true
+            return node.text?.toString();
         }
 
         for (i in 0 until node.childCount) {
             node.getChild(i)?.let {
-                if (findNodeWithText(it, text)) return true
+                val textFound = findNodeWithText(it, text)
+                if (textFound != null) return textFound
             }
         }
-        return false
+        return null
     }
 
     private fun looksLikeVerticalVideoFeed(node: AccessibilityNodeInfo): Boolean {
@@ -118,9 +99,42 @@ class ShortsAccessibilityService : AccessibilityService() {
     }
 
     private fun blockShorts() {
-        ShortsBlockerOverlay.show(this)
+        ShortsBlockerOverlay.show(this, detectedHeuristic)
         performGlobalAction(GLOBAL_ACTION_BACK)
     }
+
+
+    /**
+     * Reads the packageNames from accessibility_service_config.xml
+     * to avoid hardcoding them in the code.
+     */
+    private fun loadMonitoredPackagesFromConfig(): Set<String> {
+        return try {
+            val parser: XmlPullParser = resources.getXml(R.xml.accessibility_service_config)
+            var eventType = parser.eventType
+
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.START_TAG &&
+                    parser.name == "accessibility-service") {
+                    val packageNames = parser.getAttributeValue(
+                        "http://schemas.android.com/apk/res/android",
+                        "packageNames"
+                    )
+                    if (packageNames != null) {
+                        return packageNames.split(",").map { it.trim() }.toSet()
+                    }
+                }
+                eventType = parser.next()
+            }
+
+            // Fallback if parsing fails
+            emptySet()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptySet()
+        }
+    }
+
 
 
 }
