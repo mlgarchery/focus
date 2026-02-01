@@ -8,9 +8,18 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
-/build
-/app/build
+
 /captures
 .externalNativeBuild
 .cxx
 local.properties
+
+# Keystore files
+*.jks
+*.keystore
+keystore_base64.txt
+
+# Release build
+app/release
+build
+app/build
