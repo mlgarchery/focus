@@ -3,4 +3,4 @@
     android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged"
     android:accessibilityFeedbackType="feedbackGeneric"
     android:canRetrieveWindowContent="true"
-    android:packageNames="com.google.android.youtube,com.vivaldi.browser,org.telegram.messenger"/>
+    android:packageNames="com.google.android.youtube,com.vivaldi.browser,org.telegram.messenger,org.mozilla.firefox"/>
