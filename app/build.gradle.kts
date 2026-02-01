@@ -1,3 +1,4 @@
+
 import java.util.Properties
 import java.io.FileInputStream
 
@@ -13,19 +14,19 @@ if (keystorePropertiesFile.exists()) {
 }
 
 fun getProperty(key: String, envVar: String): String {
-    return (keystoreProperties[key] as String).ifEmpty {
-        System.getenv(envVar) ?: ""
-    }
+    val keystoreFile = keystoreProperties[key]
+    if(keystoreFile !is String) return System.getenv(envVar)
+    return keystoreFile
 }
 
 android {
-    namespace = "com.example.focus"
+    namespace = "fr.focusphone"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.focus"
-        minSdk = 24
-        targetSdk = 35
+        applicationId = "fr.focusphone"
+        minSdk = 26
+        targetSdk = 36
         versionCode = 1
         versionName = System.getenv("APP_VERSION") ?: "debug"
 
