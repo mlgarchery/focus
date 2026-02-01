@@ -68,16 +68,21 @@ jobs:
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > app/release-keystore.jks
 
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
       - name: Build Release APK
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
         run: ./gradlew assembleRelease --stacktrace
 
-      - name: Get version from tag
-        id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      - name: Rename APK
+        run: |
+          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/focus-app.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -90,9 +95,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
 
-      - name: Upload Release APK as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: focus-release-apk-${{ steps.get_version.outputs.VERSION }}
-          path: app/build/outputs/apk/release/*.apk
-          retention-days: 90
+      # - name: Upload Release APK as Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: focus-release-apk-${{ steps.get_version.outputs.VERSION }}
+      #     path: app/build/outputs/apk/release/*.apk
+      #     retention-days: 90
