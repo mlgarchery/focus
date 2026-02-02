@@ -25,7 +25,7 @@ Windows: `Get-FileHash .\focus-app.apk -Algorithm SHA256`
 If the string matches with the sha256 checksum, the download is perfect.
 
 **Step 2: Verify Authenticity (Did the developer sign this?)**
-Install [Apk Analyzer](https://play.google.com/store/apps/details?id=sk.styk.martin.apkanalyzer&pcampaignid=web_share) on your Android. Put the .apk file on you phone and analyze it. Check that the Issuer name is `Martial Garchery` and that one of the Certificates hashes among MD5, SHA-1 or SHA-256 matches one of these (remove ':' and initial '0' when comparing):
+Install [Apk Analyzer](https://play.google.com/store/apps/details?id=sk.styk.martin.apkanalyzer&pcampaignid=web_share) on your Android. Put the .apk file on you phone and analyze it. Check that the Issuer name is `Martial Garchery` and more importantly that one of the Certificates hashes among MD5, SHA-1 or SHA-256 matches one of these (remove ':' and initial '0' when comparing):
 
 - MD5: 29:D0:FD:9E:57:BF:9F:E2:C8:F4:8B:7A:6C:8A:07:5D
 - SHA1: 7C:DF:46:0E:73:89:68:00:1D:CB:C2:C8:23:8A:CF:CF:45:89:8F:ED
@@ -33,9 +33,9 @@ Install [Apk Analyzer](https://play.google.com/store/apps/details?id=sk.styk.mar
 
 ![Apk Analyzer app](imgs/photo_2026-02-02_00-42-42.jpg)
 
-If this matches our "Certificate" hash, the app is 100% genuine.
+If it matches, the app is 100% genuine.
 
-(If you have the Android SDK installed, you can use apksigner: `apksigner verify --print-certs app-release.apk` instead of using the Apk a)
+(If you have the Android SDK installed, you can use apksigner: `apksigner verify --print-certs app-release.apk` instead of using the Apk Analyzer app)
 
 ## Installation
 
@@ -45,10 +45,10 @@ Put the verified APK on your phone and install it. Google will display a warning
 
 Then once you launch the app you have two buttons directing you to the permissions to accept:
 
-1. Permission to read the screen
+1. Permission to read other apps content (accessibility service)
    ![First permission, read screen](imgs/Screenshot_20260201_184050_Settings.jpg)
 
-2. Permission to display overlay on top of other app
+2. Permission to display overlays on top of other apps
    ![Second permission, allow overlay](imgs/Screenshot_20260201_184125_Settings.jpg)
 
 ## More
