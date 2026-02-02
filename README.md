@@ -1,6 +1,6 @@
 # Focus Phone
 
-[Iphone users](# Iphone users)
+[Iphone users](#Iphone users)
 
 ## Block Shorts everywhere they are
 
