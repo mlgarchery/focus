@@ -1,11 +1,5 @@
 # How the Release Build Works
 
-## On Version Tag Push (e.g., `v1.0.0`)
-
-- Builds a **release APK** (signed with your keystore)
-- Creates a GitHub Release automatically
-- Attaches the signed APK to the release
-
 ## Creating a Release
 
 To trigger a release build:
