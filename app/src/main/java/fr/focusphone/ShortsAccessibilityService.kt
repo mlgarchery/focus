@@ -38,12 +38,21 @@ class ShortsAccessibilityService : AccessibilityService() {
             return true
         }
 
-        // Heuristic 2: "Shorts" text detected
-        val textFound = findNodeWithText(root, "Shorts")
+        // Heuristic 2 is the most important one, and can be improved:
+        // Try to find what looks like a url address bar and search for shorts/ or shorts? in it
+
+        // Heuristic 2: "shorts" text detected
+        val textFound = findNodeWithText(root, "shorts?")
         if (textFound != null) {
-            detectedHeuristic = "'Shorts' found in  text '$textFound'"
+            detectedHeuristic = "'shorts?' found in  text '$textFound'"
             return true
         }
+        val linkTextFound = findNodeWithText(root, "shorts/")
+        if (linkTextFound != null) {
+            detectedHeuristic = "'shorts/' found in  text '$linkTextFound'"
+            return true
+        }
+
 
         // Heuristic 3: Vertical pager + no seek bar
         if (looksLikeVerticalVideoFeed(root)) {
@@ -60,11 +69,11 @@ class ShortsAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * Recursively searches for a node with the given text, **ignoring case**.
+     * Recursively searches for a node with the given text, **not ignoring case**.
      * Returns null if not found or the node text if found.
      */
     private fun findNodeWithText(node: AccessibilityNodeInfo, text: String): String? {
-        if (node.text?.toString()?.contains(text, ignoreCase = true) == true) {
+        if (node.text?.toString()?.contains(text, ignoreCase = false) == true) {
             return node.text?.toString();
         }
 
