@@ -1,5 +1,7 @@
 # Focus Phone
 
+[Iphone users](# Iphone users)
+
 ## Block Shorts everywhere they are
 
 If a short is detected for 5 seconds straight, the phone is blocked: you have to wait a delay for the blocking overlay to disappear and to be able to use your phone again and FOCUS on something else than trash content.
@@ -55,3 +57,7 @@ Then once you launch the app you have two buttons directing you to the permissio
 
 The detection can be improved, _for sure_.
 Other services relying on doom-scrolling will be detected in the future.
+
+# Iphone users
+
+If you possess an iPhone, you may be interested in reading from Mehret Biruk great blog "time spent offline": https://mehretbiruk.com/2021/05/10/smartphone-to-dumb-phone/
