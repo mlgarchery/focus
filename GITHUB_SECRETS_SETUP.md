@@ -21,12 +21,19 @@ Follow the prompts to set:
 
 **⚠️ IMPORTANT**: Keep your keystore file and passwords secure! If you lose them, you cannot update your app on the Play Store.
 
+To get SHA-1 and SHA-256 fingerprints for your signing certificate in Android Studio:
+
+- Open the Gradle tool window on the far right side of Android Studio.
+- Click the Execute Gradle Task icon (the small "elephant" icon).
+- In the command box that appears, type: signingReport and press Enter.
+- Open the Run tab at the bottom of the screen. You will see a list of all your build variants. 
+  Scroll until you find your specific variant ("release" one) to see the SHA-1 and SHA-256 strings.
+
 ## Required GitHub Secrets
 
 You need to add 4 secrets to your GitHub repository:
 
 ### 1. KEYSTORE_BASE64
-
 This is your keystore file encoded as base64.
 
 **To create it:**
@@ -66,68 +73,3 @@ The key password (often the same as the keystore password).
 - `KEYSTORE_PASSWORD`
 - `KEY_ALIAS`
 - `KEY_PASSWORD`
-
-## How the Workflow Works
-
-### On Every Commit/PR
-
-- Builds a **debug APK** (unsigned)
-- Uploads it as a workflow artifact
-- Verifies that the app builds successfully
-
-### On Version Tag Push (e.g., `v1.0.0`)
-
-- Builds a **release APK** (signed with your keystore)
-- Creates a GitHub Release automatically
-- Attaches the signed APK to the release
-- Generates release notes from recent commits
-
-## Creating a Release
-
-To trigger a release build:
-
-```bash
-# Make sure your code is committed and pushed
-git add .
-git commit -m "Release version 1.0.0"
-git push
-
-# Create and push a version tag
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-The GitHub Action will automatically:
-
-1. Build the signed release APK
-2. Create a GitHub Release at: https://github.com/mlgarchery/focus/releases
-3. Upload the APK to the release
-
-## Troubleshooting
-
-### Build Fails with "Keystore was tampered with"
-
-- Check that `KEYSTORE_BASE64` was copied correctly (no line breaks or extra spaces)
-- Verify `KEYSTORE_PASSWORD` is correct
-
-### "Could not find key with alias"
-
-- Check that `KEY_ALIAS` matches exactly what you used when creating the keystore
-- Use `keytool -list -v -keystore release-keystore.jks` to verify the alias
-
-### Release Not Created
-
-- Ensure the tag follows the format `vX.X.X` (e.g., `v1.0.0`, `v2.1.3`)
-- Check the Actions tab for error messages: https://github.com/mlgarchery/focus/actions
-
-## Workflow Files
-
-- **Workflow:** `.github/workflows/build.yml`
-- **Build Config:** `app/build.gradle.kts` (signing configuration)
-
-## Security Notes
-
-- ✅ Keystore file is NOT committed to the repository (protected by `.gitignore`)
-- ✅ Secrets are encrypted in GitHub and only visible to repository owners
-- ✅ Secrets are only accessible during workflow execution
-- ⚠️ Keep a backup of your keystore file in a secure location
