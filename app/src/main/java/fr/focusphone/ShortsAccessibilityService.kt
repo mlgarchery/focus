@@ -8,7 +8,7 @@ import org.xmlpull.v1.XmlPullParser
 class ShortsAccessibilityService : AccessibilityService() {
 
     private var shortsStartTime: Long? = null
-    private val SHORTS_LIMIT_MS = 5 * 1 * 1000L // 5 seconds!
+    private val SHORTS_LIMIT_MS = 10 * 1000L // 10 seconds!
     private val monitoredPackages: Set<String> by lazy {
         loadMonitoredPackagesFromConfig()
     }
@@ -95,6 +95,8 @@ class ShortsAccessibilityService : AccessibilityService() {
     private fun onShortsDetected() {
         if (shortsStartTime == null) {
             shortsStartTime = System.currentTimeMillis()
+            // Show pie timer overlay when timer starts
+            PieTimerOverlay.show(this, SHORTS_LIMIT_MS)
         }
 
         val elapsed = System.currentTimeMillis() - shortsStartTime!!
@@ -105,6 +107,8 @@ class ShortsAccessibilityService : AccessibilityService() {
 
     private fun onShortsExited() {
         shortsStartTime = null
+        // Hide pie timer overlay when user exits shorts
+        PieTimerOverlay.hide(this)
     }
 
     private fun blockShorts() {
